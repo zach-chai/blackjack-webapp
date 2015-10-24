@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  get 'blackjack/join'
+
+  get 'blackjack/hit'
+
+  get 'blackjack/stay'
+
+  get 'blackjack/split'
+
   get 'welcome/index'
 
   root 'welcome#index'
