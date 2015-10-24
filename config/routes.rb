@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  root 'players#index'
+  get 'welcome/index'
+
+  root 'welcome#index'
+  resources :games
   resources :players
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
