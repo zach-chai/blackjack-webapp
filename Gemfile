@@ -15,6 +15,8 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 gem 'therubyrhino'
+# gem for resolving timezone data source errors
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :jruby]
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
