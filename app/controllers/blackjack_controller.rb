@@ -1,11 +1,11 @@
 class BlackjackController < ApplicationController
   before_action :set_game
-  before_action :set_player, only: [:hit, :stay, :split]
+  before_action :set_player
 
   def join
     #redirect if game full
 
-    @player = @game.players.create
+    @player ||= @game.players.create
   end
 
   def hit
@@ -24,6 +24,6 @@ class BlackjackController < ApplicationController
     end
 
     def set_player
-      @player = Player.find(params[:player_id])
+      @player = Player.find_by_id(params[:player_id]) || nil
     end
 end
