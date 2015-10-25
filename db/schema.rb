@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151024173613) do
+ActiveRecord::Schema.define(version: 20151025162847) do
+
+  create_table "cards", force: :cascade do |t|
+    t.string   "suit",       limit: 255
+    t.string   "value",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "game_id"
+    t.integer  "player_id"
+  end
+
+  add_index "cards", ["game_id"], name: "index_cards_on_game_id"
+  add_index "cards", ["player_id"], name: "index_cards_on_player_id"
 
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false

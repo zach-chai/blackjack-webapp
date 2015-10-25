@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :cards
   get 'blackjack/join'
 
   get 'blackjack/hit'
