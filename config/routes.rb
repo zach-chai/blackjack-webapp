@@ -7,8 +7,6 @@ Rails.application.routes.draw do
 
   get 'blackjack/split'
 
-  get 'welcome/index'
-
   root 'welcome#index'
   resources :games
   resources :players

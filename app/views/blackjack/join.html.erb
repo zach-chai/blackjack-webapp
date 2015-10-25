@@ -1,2 +1,19 @@
 <h1>Blackjack#join</h1>
 <p>Find me in app/views/blackjack/join.html.erb</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><%= "Game ID: #{@game.id}" %></td>
+    </tr>
+    <tr>
+      <td><%= "Player ID: #{@player.id}" %></td>
+    </tr>
+    <% @game.players.each do |player| %>
+      <tr>
+        <td><%= "Plyaer #{player.id}" %></td>
+        <td><%= "Hand" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

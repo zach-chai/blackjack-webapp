@@ -15,7 +15,7 @@
         <td><%= link_to 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>
         <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <td><%= link_to "Join", controller: "blackjack", action: "join" %></td>
+        <td><%= link_to "Join", controller: "blackjack", action: "join", game_id: game.id %></td>
       </tr>
     <% end %>
   </tbody>
