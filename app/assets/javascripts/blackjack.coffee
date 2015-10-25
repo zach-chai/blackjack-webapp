@@ -11,10 +11,21 @@ $(document).on 'ready page:load', ->
       for player in data
         $("#game-data").append "<tr><td>Player #{player.id}</td><td>Hand</td></tr>"
 
-
   autoUpdate = ->
     if $("#game-id").get 0
       updateGame()
       setTimeout autoUpdate, 5000
+
+  $(".action").click ->
+    action = $(this).data "action"
+    $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id() }
+    .fail ->
+      alert "not your turn"
+
+  get_player_id = ->
+    $("#player-id").data "id"
+
+  get_game_id = ->
+    $("#game-id").data "id"
 
   autoUpdate()

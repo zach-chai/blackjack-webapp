@@ -2,11 +2,11 @@ Rails.application.routes.draw do
   resources :cards
   get 'blackjack/join'
 
-  get 'blackjack/hit'
+  post 'blackjack/hit'
 
-  get 'blackjack/stay'
+  post 'blackjack/stay'
 
-  get 'blackjack/split'
+  post 'blackjack/split'
 
   root 'welcome#index'
   resources :games

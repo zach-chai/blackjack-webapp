@@ -7,7 +7,16 @@
       <td><h2 id="game-id" data-id=<%= "#{@game.id}" %>><%= "Game ID: #{@game.id}" %></h2></td>
     </tr>
     <tr>
-      <td><%= "Player ID: #{@player.id}" %></td>
+      <td><h2 id="player-id" data-id=<%= "#{@player.id}" %>><%= "Player ID: #{@player.id}" %></h2></td>
+    </tr>
+    <tr>
+      <td><button type="button" data-action="hit" class="action" >Hit</button></td>
+    </tr>
+    <tr>
+      <td><button type="button" data-action="stay" class="action" >Stay</button></td>
+    </tr>
+    <tr>
+      <td><button type="button" data-action="split" class="action" >Split</button></td>
     </tr>
   </tbody>
 </table>

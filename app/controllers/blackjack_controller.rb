@@ -1,7 +1,7 @@
 class BlackjackController < ApplicationController
   before_action :set_game
   before_action :set_player
-  after_action :end_turn, only: [:hit, :stay]
+  after_action :end_turn
 
   def join
     #redirect if game full
