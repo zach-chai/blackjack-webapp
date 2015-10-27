@@ -11,4 +11,8 @@ class Card < ActiveRecord::Base
   def ==(o)
     o.class == self.class && o.suit == suit && o.value == value
   end
+
+  def to_s
+    "#{value} of #{suit}"
+  end
 end

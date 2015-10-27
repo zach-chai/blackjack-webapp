@@ -6,10 +6,16 @@ $(document).on 'ready page:load', ->
   updateGame = ->
     id = $("#game-id").data "id"
     $.getJSON "/players?game_id=#{id}"
-    .done (data) ->
+    .done (data1) ->
       $("#game-data tr").remove()
-      for player in data
-        $("#game-data").append "<tr><td>Player #{player.id}</td><td>Hand</td></tr>"
+      for player in data1
+        do (player) ->
+          $.getJSON "/cards?player_id=#{player.id}"
+          .done (data2) ->
+            card_string = ""
+            for card in data2
+              card_string += "<td>#{card.value} of #{card.suit}</td>"
+            $("#game-data").append "<tr><td>Player #{player.name}</td></tr><tr>#{card_string}</tr>"
 
   autoUpdate = ->
     if $("#game-id").get 0

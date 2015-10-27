@@ -4,7 +4,12 @@ class CardsController < ApplicationController
   # GET /cards
   # GET /cards.json
   def index
-    @cards = Card.all
+    if params[:player_id]
+      @player = Player.find(params[:player_id])
+      @cards = @player.cards
+    else
+      @cards = Card.all
+    end
   end
 
   # GET /cards/1

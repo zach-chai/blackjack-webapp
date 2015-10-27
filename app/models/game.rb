@@ -12,4 +12,8 @@ class Game < ActiveRecord::Base
     end
     cards
   end
+
+  def get_player_ordered num
+    players.where(name: "#{num}").first
+  end
 end
