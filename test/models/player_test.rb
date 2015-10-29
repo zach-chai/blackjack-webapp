@@ -19,6 +19,9 @@ class PlayerTest < ActiveSupport::TestCase
 
     player.draw_card Card.random(game.id).first
     assert_equal player.cards.size, 1
+    player.draw_card(Card.random(game.id).first, {hidden: true, split_hand: "left"})
+    assert_equal 1, player.cards.where(hidden: true).size
+    assert_equal 1, player.cards.where(split_hand: "left").size
   end
 
   test "has turn" do
@@ -32,8 +35,21 @@ class PlayerTest < ActiveSupport::TestCase
 
   test "split" do
     player = Player.create
+    player.cards.create
+    player.cards.create
     assert_equal nil, player.has_split
     player.split
     assert_equal true, player.has_split
+    assert_equal 2, player.cards.where(hidden: false).size
+  end
+
+  test "end turn" do
+    player = Player.create has_turn: true, left_turn: true, right_turn: true
+    player.end_turn "left"
+    assert_equal false, player.left_turn
+    player.end_turn "right"
+    assert_equal false, player.right_turn
+    player.end_turn
+    assert_equal false, player.has_turn
   end
 end

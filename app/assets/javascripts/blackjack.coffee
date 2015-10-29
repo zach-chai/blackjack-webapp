@@ -13,9 +13,21 @@ $(document).on 'ready page:load', ->
           $.getJSON "/cards?player_id=#{player.id}"
           .done (data2) ->
             card_string = ""
+            card_string2 = ""
             for card in data2
-              card_string += "<td>#{card.value} of #{card.suit}</td>"
-            $("#game-data").append "<tr><td>Player #{player.name}</td></tr><tr>#{card_string}</tr>"
+              if card.split_hand == null || card.split_hand == "left"
+                if get_player_id() != player.id && card.hidden
+                  card_string += "<td> hidden </td>"
+                else
+                  card_string += "<td> #{card.value} of #{card.suit} </td>"
+              else
+                if get_player_id() != player.id && card.hidden
+                  card_string2 += "<td> hidden </td>"
+                else
+                  card_string2 += "<td> #{card.value} of #{card.suit} </td>"
+            $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr>#{card_string}</tr>"
+            if card_string2
+              $("#game-data").append("<tr><td>Player #{player.name} Hand 2</td></tr><tr>#{card_string2}</tr>")
 
   autoUpdate = ->
     if $("#game-id").get 0
@@ -25,8 +37,10 @@ $(document).on 'ready page:load', ->
   $(".action").click ->
     action = $(this).data "action"
     $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id() }
+    .done ->
+      alert "success"
     .fail ->
-      alert "not your turn"
+      alert "fail"
 
   get_player_id = ->
     $("#player-id").data "id"

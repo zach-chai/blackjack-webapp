@@ -1,12 +1,12 @@
 class BlackjackController < ApplicationController
-  before_action :set_game
-  before_action :set_player
+  before_action :before_actions
 
   def join
     # redirect if game full
     if @game.players.size >= 4
-      flash[:notice] = "Game full"
+      flash[:alert] = "Game full"
       redirect_to games_path
+      return
     else
       @player ||= @game.players.create(name: @game.players.size + 1)
     end
@@ -16,8 +16,8 @@ class BlackjackController < ApplicationController
       @game.update round: 1
       @game.load_deck
       @game.players.each do |player|
-        player.draw_card Card.random(@game.id).first
-        player.draw_card Card.random(@game.id).first
+        player.draw_card(Card.random(@game.id).first, {hidden: true})
+        player.draw_card(Card.random(@game.id).first)
       end
       @game.get_player_ordered(1).begin_turn
     end
@@ -25,23 +25,24 @@ class BlackjackController < ApplicationController
 
   def hit
     if @player.has_split
-
+      draw(split_hand: params[:split])
     else
       draw
-      end_turn
     end
+    end_turn
   end
 
   def stay
-    if @player.has_split
-
-    else
-      end_turn
-    end
+    end_turn
   end
 
   def split
+    return render(status: :unprocessable_entity) unless @game.round == 1
+    return render(status: :unprocessable_entity) unless @player.cards.first.value == @player.cards.second.value
     @player.split
+    draw(hidden: true, split_hand: "left")
+    draw(hidden: true, split_hand: "right")
+    end_turn
   end
 
   private
@@ -55,10 +56,25 @@ class BlackjackController < ApplicationController
     end
 
     def end_turn
-      @player.end_turn
+      split = params[:split] || nil
+      @player.end_turn split
+      # set next players turn
+      if @player.has_turn == false
+        @game.get_player_ordered((@player.name.to_i % 4) + 1).begin_turn
+      end
     end
 
-    def draw
-      @player.draw_card Card.random(@game.id).first
+    def draw(options = {})
+      @player.draw_card(Card.random(@game.id).first, options)
+    end
+
+    def before_actions
+      set_game
+      set_player
+      unless params[:action] == "join"
+        if @player.has_turn == false
+          render status: :unprocessable_entity and return false
+        end
+      end
     end
 end

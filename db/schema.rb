@@ -11,15 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027143009) do
+ActiveRecord::Schema.define(version: 20151029024925) do
 
   create_table "cards", force: :cascade do |t|
     t.string   "suit",       limit: 255
     t.string   "value",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "game_id"
     t.integer  "player_id"
+    t.boolean  "hidden",                 default: false
+    t.string   "split_hand", limit: 255
   end
 
   add_index "cards", ["game_id"], name: "index_cards_on_game_id"
