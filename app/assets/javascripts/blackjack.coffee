@@ -36,7 +36,8 @@ $(document).on 'ready page:load', ->
 
   $(".action").click ->
     action = $(this).data "action"
-    $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id() }
+    split = $(this).data("split") || null
+    $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id(), split: split }
     .done ->
       alert "success"
     .fail ->

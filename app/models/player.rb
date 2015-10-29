@@ -14,9 +14,8 @@ class Player < ActiveRecord::Base
     if has_split == true
       self.left_turn = true
       self.right_turn = true
-    else
-      self.has_turn = true
     end
+    self.has_turn = true
     save
   end
 

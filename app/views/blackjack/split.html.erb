@@ -1,2 +1,32 @@
 <h1>Blackjack#split</h1>
 <p>Find me in app/views/blackjack/split.html.erb</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><h2 id="game-id" data-id=<%= "#{@game.id}" %>><%= "Game ID: #{@game.id}" %></h2></td>
+    </tr>
+    <tr>
+      <td><h2 id="player-id" data-id=<%= "#{@player.id}" %>><%= "Player #{@player.name}" %></h2></td>
+    </tr>
+    <tr>
+      <td><h3>Hand 1</h3></td>
+    </tr>
+    <tr>
+      <td><button type="button" data-action="hit" data-split="left" class="action" >Hit</button></td>
+      <td><button type="button" data-action="stay" data-split="left" class="action" >Stay</button></td>
+    </tr>
+    <tr>
+      <td><h3>Hand 2</h3></td>
+    </tr>
+    <tr>
+      <td><button type="button" data-action="hit" data-split="right" class="action" >Hit</button></td>
+      <td><button type="button" data-action="stay" data-split="right" class="action" >Stay</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<table id="game-data">
+  <tbody>
+  </tbody>
+</table>
