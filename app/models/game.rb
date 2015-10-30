@@ -1,5 +1,6 @@
 class Game < ActiveRecord::Base
   include Cardable
+  PLAYERS = 3
 
   has_many :players
   has_many :cards

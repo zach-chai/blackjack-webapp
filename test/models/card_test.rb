@@ -11,4 +11,11 @@ class CardTest < ActiveSupport::TestCase
 
     assert Card.random(game.id).size, 1
   end
+
+  test 'score' do
+    card = Card.create value: "Jack"
+    assert_equal 10, card.score
+    card = Card.create value: "Six"
+    assert_equal 6, card.score
+  end
 end

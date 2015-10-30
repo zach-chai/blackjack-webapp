@@ -43,4 +43,15 @@ class Player < ActiveRecord::Base
     self.right_turn = false
     save
   end
+
+  def hand_value
+    value = 0
+    cards.each do |card|
+      value = value + card.score
+    end
+    value
+  end
+  def has_ace?
+    cards.map(&:value).include? "Ace"
+  end
 end

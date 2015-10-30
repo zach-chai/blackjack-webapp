@@ -12,6 +12,31 @@ class Card < ActiveRecord::Base
     o.class == self.class && o.suit == suit && o.value == value
   end
 
+  def score
+    case value
+    when "Two"
+      2
+    when "Three"
+      3
+    when "Four"
+      4
+    when "Five"
+      5
+    when "Six"
+      6
+    when "Seven"
+      7
+    when "Eight"
+      8
+    when "Nine"
+      9
+    when "Ten", "Jack", "Queen", "King", "Ace"
+      10
+    else
+      0
+    end
+  end
+
   def to_s
     "#{value} of #{suit}"
   end

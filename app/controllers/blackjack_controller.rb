@@ -3,7 +3,7 @@ class BlackjackController < ApplicationController
 
   def join
     # redirect if game full
-    if @game.players.size >= 4
+    if @game.players.size >= Game::PLAYERS
       flash[:alert] = "Game full"
       redirect_to games_path
       return
@@ -12,7 +12,8 @@ class BlackjackController < ApplicationController
     end
 
     # start game
-    if @game.players.size >= 4
+    if @game.players.size >= Game::PLAYERS
+      @game.players.create(name: "dealer", has_turn: false)
       @game.update round: 1
       @game.load_deck
       @game.players.each do |player|
@@ -38,6 +39,7 @@ class BlackjackController < ApplicationController
 
   def split
     return render(status: :unprocessable_entity) unless @game.round == 1
+    return render(status: :unprocessable_entity) if @player.has_split
     return render(status: :unprocessable_entity) unless @player.cards.first.value == @player.cards.second.value
     @player.split
     draw(hidden: true, split_hand: "left")
@@ -60,7 +62,15 @@ class BlackjackController < ApplicationController
       @player.end_turn split
       # set next players turn
       if @player.has_turn == false
-        @game.get_player_ordered((@player.name.to_i % 4) + 1).begin_turn
+        @game.get_player_ordered((@player.name.to_i % Game::PLAYERS) + 1).begin_turn
+
+        # dealer plays his turn
+        if @player.name.to_i % Game::PLAYERS == 0
+          dealer = @game.players.where(name: "dealer").first
+          if dealer.hand_value < 17 || (dealer.hand_value == 17 && dealer.has_ace?)
+            dealer.draw_card(Card.random(@game.id).first)
+          end
+        end
       end
     end
 

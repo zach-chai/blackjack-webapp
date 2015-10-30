@@ -52,4 +52,22 @@ class PlayerTest < ActiveSupport::TestCase
     player.end_turn
     assert_equal false, player.has_turn
   end
+
+  test "hand value" do
+    player = Player.create
+    player.cards.create value: "Five"
+    player.cards.create value: "Ace"
+    assert_equal 15, player.hand_value
+  end
+
+  test "has ace" do
+    player = Player.create
+    player.cards.create value: "Ace"
+    player.cards.create value: "Five"
+    assert player.has_ace?
+    player.cards.delete_all
+    player.cards.create value: "Five"
+    player.cards.create value: "King"
+    assert_equal false, player.has_ace?
+  end
 end
