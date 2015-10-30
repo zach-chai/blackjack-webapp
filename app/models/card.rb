@@ -30,8 +30,10 @@ class Card < ActiveRecord::Base
       8
     when "Nine"
       9
-    when "Ten", "Jack", "Queen", "King", "Ace"
+    when "Ten", "Jack", "Queen", "King"
       10
+    when "Ace"
+      11
     else
       0
     end

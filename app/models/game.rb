@@ -7,7 +7,7 @@ class Game < ActiveRecord::Base
 
   def load_deck
     for suit in Card::SUITS
-      for value in ["Four", "Four", "Four", "Four", "Four", "Four", "Four", "Four", "Four", "Four"]
+      for value in Card::VALUES
         cards.create value: value, suit: suit
       end
     end

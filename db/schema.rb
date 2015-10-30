@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151029024925) do
+ActiveRecord::Schema.define(version: 20151030155316) do
 
   create_table "cards", force: :cascade do |t|
     t.string   "suit",       limit: 255
@@ -34,14 +34,19 @@ ActiveRecord::Schema.define(version: 20151029024925) do
   end
 
   create_table "players", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.string   "name",         limit: 255
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.integer  "game_id"
-    t.boolean  "has_turn",               default: false
+    t.boolean  "has_turn",                 default: false
     t.boolean  "has_split"
     t.boolean  "left_turn"
     t.boolean  "right_turn"
+    t.boolean  "stayed",                   default: false
+    t.boolean  "left_stayed",              default: false
+    t.boolean  "right_stayed",             default: false
+    t.integer  "score"
+    t.boolean  "charlie"
   end
 
   add_index "players", ["game_id"], name: "index_players_on_game_id"

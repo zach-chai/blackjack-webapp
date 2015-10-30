@@ -19,17 +19,21 @@ class Player < ActiveRecord::Base
     save
   end
 
-  def end_turn(split = nil)
+  def end_turn(split = nil, stay = false)
     case split
     when "left"
       self.left_turn = false
+      self.left_stayed = stay
     when "right"
       self.right_turn = false
+      self.right_stayed = stay
     else
       self.has_turn = false
+      self.stayed = stay
     end
     if self.left_turn == false && self.right_turn == false
       self.has_turn = false
+      self.stayed = self.left_stayed && self.right_stayed
     end
     save
   end
@@ -49,9 +53,34 @@ class Player < ActiveRecord::Base
     cards.each do |card|
       value = value + card.score
     end
+    num_aces.times do |i|
+      if value > 21
+        value -= 10
+      end
+    end
     value
   end
+
   def has_ace?
     cards.map(&:value).include? "Ace"
+  end
+
+  def num_aces
+    aces = 0
+    cards.map(&:value).each do |value|
+      if value == "Ace"
+        aces += 1
+      end
+    end
+    aces
+  end
+
+  def calculate_score!
+    self.score = hand_value
+    save
+  end
+
+  def has_charlie?
+    (cards.size == 7 && hand_value <= 21)
   end
 end
