@@ -4,9 +4,11 @@
 
 $(document).on 'ready page:load', ->
   updateGame = ->
-    id = $("#game-id").data "id"
+    id = get_game_id()
     $.getJSON "/players?game_id=#{id}"
     .done (data1) ->
+      if data1[0].score
+        window.location.href = "/blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
       $("#game-data tr").remove()
       for player in data1
         do (player) ->
@@ -30,7 +32,7 @@ $(document).on 'ready page:load', ->
               $("#game-data").append("<tr><td>Player #{player.name} Hand 2</td></tr><tr>#{card_string2}</tr>")
 
   autoUpdate = ->
-    if $("#game-id").get 0
+    if window.location.pathname == "/blackjack/join"
       updateGame()
       setTimeout autoUpdate, 5000
 

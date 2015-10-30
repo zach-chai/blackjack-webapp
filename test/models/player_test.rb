@@ -51,6 +51,13 @@ class PlayerTest < ActiveSupport::TestCase
     assert_equal false, player.right_turn
     player.end_turn
     assert_equal false, player.has_turn
+
+    player.end_turn "left", true
+    assert player.left_stayed
+    player.end_turn "right", true
+    assert player.right_stayed
+    player.end_turn nil, true
+    assert player.stayed
   end
 
   test "hand value" do
