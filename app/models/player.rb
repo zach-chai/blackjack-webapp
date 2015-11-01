@@ -93,10 +93,11 @@ class Player < ActiveRecord::Base
   end
 
   def calculate_score!
-    if split_hand == nil
-      self.score = hand_value
+    self.reload
+    if has_split
+      self.update left_score: split_value("left"), right_score: split_value("right")
     else
-      raise "require implementation"
+      self.score = hand_value
     end
     save
   end

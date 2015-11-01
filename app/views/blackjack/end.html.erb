@@ -11,13 +11,19 @@
     </tr>
     <tr>
       <td><h4>Name</h4></td>
-      <td><h4>Score</h4></td>
+      <td><h4>Score Hand 1</h4></td>
+      <td><h4>Score Hand 2</h4></td>
       <td><h4>Condition</h4></td>
     </tr>
     <% @game.players.each do |player| %>
       <tr>
         <td><h4><%= "Player #{player.name}" %></h4></td>
-        <td><h4><%= "#{player.score}" %></h4></td>
+        <% if player.has_split %>
+          <td><h4><%= "#{player.left_score}" %></h4></td>
+        <% else %>
+          <td><h4><%= "#{player.score}" %></h4></td>
+        <% end %>
+        <td><h4><%= "#{player.right_score}" %></h4></td>
         <td><h4><%= "need condition" %></h4></td>
       </tr>
     <% end %>

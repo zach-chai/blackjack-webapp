@@ -89,9 +89,11 @@ class BlackjackController < ApplicationController
           # if dealer just play their turn server side
           if next_player.name == "dealer"
             dealer = @game.players.where(name: "dealer").first
-            if dealer.hand_value < 17 || (dealer.hand_value == 17 && dealer.has_ace?)
+
+            while dealer.hand_value < 17 || (dealer.hand_value == 17 && dealer.has_ace?)
               dealer.draw_card(Card.random(@game.id).first)
             end
+
             break
 
           # play their turn if an AI
@@ -145,25 +147,24 @@ class BlackjackController < ApplicationController
       # split if possible
       if next_player.cards.first.value == next_player.cards.second.value
         next_player.split
-        draw(hidden: true, split_hand: "left")
-        draw(hidden: true, split_hand: "right")
+        next_player.draw_card(Card.random(@game.id).first, split_hand: "left", hidden: true)
+        next_player.draw_card(Card.random(@game.id).first, split_hand: "right", hidden: true)
       end
       # hit or stay
       if next_player.has_split
         while hit_check next_player, "left"
           next_player.draw_card(Card.random(@game.id).first, split_hand: "left")
-          break if next_player.hand_value > 21
+          break if next_player.split_value("left") > 21
         end
         next_player.end_turn "left", true
         while hit_check next_player, "right"
           next_player.draw_card(Card.random(@game.id).first, split_hand: "right")
-          break if next_player.hand_value > 21
+          break if next_player.split_value("right") > 21
         end
-        next_player.end_turn "left", true
+        next_player.end_turn "right", true
       else
         while hit_check next_player
           next_player.draw_card(Card.random(@game.id).first)
-          puts next_player.hand_value
           break if next_player.hand_value > 21
         end
         next_player.end_turn nil, true
@@ -184,8 +185,16 @@ class BlackjackController < ApplicationController
       end
       better_hand = false
       @game.players.each do |player|
-        if the_player != player && player.hand_value(true) < the_hand_value - 10
-          better_hand = true
+        if the_player != player
+          if player.has_split
+            if player.split_value("left") > the_hand_value - 10
+              better_hand = true
+            elsif player.split_value("right") > the_hand_value - 10
+              better_hand = true
+            end
+          elsif player.hand_value(true) > the_hand_value - 10
+            better_hand = true
+          end
         end
       end
 
