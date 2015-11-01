@@ -7,7 +7,7 @@ $(document).on 'ready page:load', ->
     id = get_game_id()
     $.getJSON "/players?game_id=#{id}"
     .done (data1) ->
-      if data1[0].score
+      if data1[0].score || data1[0].left_score
         window.location.href = "/blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
       $("#game-data tr").remove()
       for player in data1
@@ -32,7 +32,7 @@ $(document).on 'ready page:load', ->
               $("#game-data").append("<tr><td>Player #{player.name} Hand 2</td></tr><tr>#{card_string2}</tr>")
 
   autoUpdate = ->
-    if window.location.pathname == "/blackjack/join"
+    if window.location.pathname == "/blackjack/join" || window.location.pathname == "/blackjack/split"
       updateGame()
       setTimeout autoUpdate, 5000
 
@@ -41,6 +41,8 @@ $(document).on 'ready page:load', ->
     split = $(this).data("split") || null
     $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id(), split: split }
     .done ->
+      if action == "split"
+        window.location.href = "/blackjack/split?game_id=#{get_game_id()}&player_id=#{get_player_id()}"
       alert "success"
     .fail ->
       alert "fail"

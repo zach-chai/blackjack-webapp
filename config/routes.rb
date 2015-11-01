@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   post 'blackjack/stay'
 
+  post 'blackjack/split'
   get 'blackjack/split'
 
   get 'blackjack/end'

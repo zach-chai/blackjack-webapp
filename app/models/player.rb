@@ -43,8 +43,6 @@ class Player < ActiveRecord::Base
     cards.first.update split_hand: "left"
     cards.where(split_hand: nil).first.update split_hand: "right"
     self.has_split = true
-    self.left_turn = false
-    self.right_turn = false
     save
   end
 
@@ -64,11 +62,13 @@ class Player < ActiveRecord::Base
     value
   end
 
-  def split_value(split_hand)
+  def split_value(split_hand, visible_only = false)
     self.reload
     value = 0
     cards.each do |card|
-      value = value + card.score if card.split_hand == split_hand
+      if card.split_hand == split_hand && (!visible_only || !card.hidden)
+        value = value + card.score
+      end
     end
     num_aces.times do |i|
       if value > 21

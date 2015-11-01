@@ -20,11 +20,14 @@ class BlackjackController < ApplicationController
   def hit
     if @player.has_split
       draw(split_hand: params[:split])
+      if @player.split_value(params[:split]) > 21
+        end_turn true
+      end
     else
       draw
-    end
-    if @player.hand_value > 21
-      end_turn true
+      if @player.hand_value > 21
+        end_turn true
+      end
     end
     head 200
   end
@@ -38,10 +41,12 @@ class BlackjackController < ApplicationController
     return render(status: :unprocessable_entity) unless @game.round == 1
     return render(status: :unprocessable_entity) if @player.has_split
     return render(status: :unprocessable_entity) unless @player.cards.first.value == @player.cards.second.value
+    if request.post?
+      return head(200)
+    end
     @player.split
     draw(hidden: true, split_hand: "left")
     draw(hidden: true, split_hand: "right")
-    end_turn
   end
 
   def start
@@ -187,9 +192,9 @@ class BlackjackController < ApplicationController
       @game.players.each do |player|
         if the_player != player
           if player.has_split
-            if player.split_value("left") > the_hand_value - 10
+            if player.split_value("left", true) > the_hand_value - 10
               better_hand = true
-            elsif player.split_value("right") > the_hand_value - 10
+            elsif player.split_value("right", true) > the_hand_value - 10
               better_hand = true
             end
           elsif player.hand_value(true) > the_hand_value - 10

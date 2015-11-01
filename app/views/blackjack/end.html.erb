@@ -13,7 +13,7 @@
       <td><h4>Name</h4></td>
       <td><h4>Score Hand 1</h4></td>
       <td><h4>Score Hand 2</h4></td>
-      <td><h4>Condition</h4></td>
+      <td><h4>Result</h4></td>
     </tr>
     <% @game.players.each do |player| %>
       <tr>
@@ -24,7 +24,7 @@
           <td><h4><%= "#{player.score}" %></h4></td>
         <% end %>
         <td><h4><%= "#{player.right_score}" %></h4></td>
-        <td><h4><%= "need condition" %></h4></td>
+        <td><h4><%= "need result" %></h4></td>
       </tr>
     <% end %>
   </tbody>
