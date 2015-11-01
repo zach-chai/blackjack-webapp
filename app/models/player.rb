@@ -48,10 +48,27 @@ class Player < ActiveRecord::Base
     save
   end
 
-  def hand_value
+  def hand_value(visible_only = false)
+    self.reload
     value = 0
     cards.each do |card|
-      value = value + card.score
+      if !card.hidden || !visible_only
+        value = value + card.score
+      end
+    end
+    num_aces.times do |i|
+      if value > 21
+        value -= 10
+      end
+    end
+    value
+  end
+
+  def split_value(split_hand)
+    self.reload
+    value = 0
+    cards.each do |card|
+      value = value + card.score if card.split_hand == split_hand
     end
     num_aces.times do |i|
       if value > 21
@@ -76,7 +93,11 @@ class Player < ActiveRecord::Base
   end
 
   def calculate_score!
-    self.score = hand_value
+    if split_hand == nil
+      self.score = hand_value
+    else
+      raise "require implementation"
+    end
     save
   end
 

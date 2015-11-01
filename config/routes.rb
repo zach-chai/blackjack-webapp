@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   get 'blackjack/end'
 
+  post 'blackjack/start'
+
   root 'welcome#index'
   resources :games
   resources :players

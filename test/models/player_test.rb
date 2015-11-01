@@ -64,7 +64,7 @@ class PlayerTest < ActiveSupport::TestCase
     player = Player.create
     player.cards.create value: "Five"
     player.cards.create value: "Ace"
-    assert_equal 15, player.hand_value
+    assert_equal 16, player.hand_value
   end
 
   test "has ace" do
