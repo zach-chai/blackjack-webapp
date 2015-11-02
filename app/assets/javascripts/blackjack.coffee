@@ -27,9 +27,9 @@ $(document).on 'ready page:load', ->
                   card_string2 += "<td> hidden </td>"
                 else
                   card_string2 += "<td> #{card.value} of #{card.suit} </td>"
-            $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr>#{card_string}</tr>"
+            $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr data-player=\"#{player.name}\" >#{card_string}</tr>"
             if card_string2
-              $("#game-data").append("<tr><td>Player #{player.name} Hand 2</td></tr><tr>#{card_string2}</tr>")
+              $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr data-player=\"#{player.name}\" >#{card_string2}</tr>"
 
   autoUpdate = ->
     if window.location.pathname == "/blackjack/join" || window.location.pathname == "/blackjack/split"
@@ -43,9 +43,9 @@ $(document).on 'ready page:load', ->
     .done ->
       if action == "split"
         window.location.href = "/blackjack/split?game_id=#{get_game_id()}&player_id=#{get_player_id()}"
-      alert "success"
+      $("#notice").text "#{action} success"
     .fail ->
-      alert "fail"
+      $("#notice").text "#{action} fail"
 
   get_player_id = ->
     $("#player-id").data "id"
