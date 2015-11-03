@@ -5,14 +5,14 @@
 $(document).on 'ready page:load', ->
   updateGame = ->
     id = get_game_id()
-    $.getJSON "/players?game_id=#{id}"
+    $.getJSON "#{get_root()}players?game_id=#{id}"
     .done (data1) ->
       if data1[0].score || data1[0].left_score
-        window.location.href = "/blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
+        window.location.href = "#{get_root()}blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
       $("#game-data tr").remove()
       for player in data1
         do (player) ->
-          $.getJSON "/cards?player_id=#{player.id}"
+          $.getJSON "#{get_root()}cards?player_id=#{player.id}"
           .done (data2) ->
             card_string = ""
             card_string2 = ""
@@ -32,17 +32,17 @@ $(document).on 'ready page:load', ->
               $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr data-player=\"#{player.name}\" >#{card_string2}</tr>"
 
   autoUpdate = ->
-    if window.location.pathname == "/blackjack/join" || window.location.pathname == "/blackjack/split"
+    if window.location.pathname == "#{get_root()}blackjack/join" || window.location.pathname == "#{get_root()}blackjack/split"
       updateGame()
       setTimeout autoUpdate, 5000
 
   $(".action").click ->
     action = $(this).data "action"
     split = $(this).data("split") || null
-    $.post "/blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id(), split: split }
+    $.post "#{get_root()}blackjack/#{action}", { game_id: get_game_id(), player_id: get_player_id(), split: split }
     .done ->
       if action == "split"
-        window.location.href = "/blackjack/split?game_id=#{get_game_id()}&player_id=#{get_player_id()}"
+        window.location.href = "#{get_root()}blackjack/split?game_id=#{get_game_id()}&player_id=#{get_player_id()}"
       $("#notice").text "#{action} success"
     .fail ->
       $("#notice").text "#{action} fail"
@@ -52,5 +52,8 @@ $(document).on 'ready page:load', ->
 
   get_game_id = ->
     $("#game-id").data "id"
+
+  get_root = ->
+    $("#app-root").attr "href"
 
   autoUpdate()
