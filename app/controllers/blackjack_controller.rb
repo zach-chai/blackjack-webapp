@@ -66,6 +66,26 @@ class BlackjackController < ApplicationController
   def end
   end
 
+  # used to drop inactive players
+  def poll
+    @game.players.where(human: true).each do |player|
+      unless player == @player
+        if player.dropped?
+          if player.has_turn
+            end_turn true, player
+          else
+            player.drop
+          end
+        else
+          player.update alive: player.alive + 1
+        end
+      end
+    end
+    @player.update alive: 0
+
+    head 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
@@ -76,41 +96,14 @@ class BlackjackController < ApplicationController
       @player = Player.find_by_id(params[:player_id]) || nil
     end
 
-    def end_turn(stay = false)
+    def end_turn(stay = false, player = @player)
       split = params[:split] || nil
-      @player.end_turn split, stay
+      player.end_turn split, stay
+
       # set next players turn
-      if @player.has_turn == false
-        # find next player
+      if player.has_turn == false
 
-        next_player = @player
-        loop do
-          if next_player.name == "#{Game::PLAYERS}"
-            next_player = @game.players.where(name: "dealer").first
-          else
-            next_player = @game.get_player_ordered(next_player.name.to_i + 1)
-          end
-
-          # if dealer just play their turn server side
-          if next_player.name == "dealer"
-            dealer = @game.players.where(name: "dealer").first
-
-            while dealer.hand_value < 17 || (dealer.hand_value == 17 && dealer.has_ace?)
-              dealer.draw_card(Card.random(@game.id).first)
-            end
-
-            break
-
-          # play their turn if an AI
-          elsif next_player.human == false
-            play_ai_turn next_player
-
-          # pass to human
-          else
-            next_player.begin_turn
-            break
-          end
-        end
+        next_player_turn player
 
         # end game if everyone has stayed
         if @game.players.where(stayed: false).size == 1
@@ -123,12 +116,43 @@ class BlackjackController < ApplicationController
       end
     end
 
+    def next_player_turn next_player
+      loop do
+        # find next player
+        if next_player.name == "#{Game::PLAYERS}"
+          next_player = @game.players.where(name: "dealer").first
+        else
+          next_player = @game.get_player_ordered(next_player.name.to_i + 1)
+        end
+
+        # if dealer just play their turn server side
+        if next_player.name == "dealer"
+          dealer = @game.players.where(name: "dealer").first
+
+          while dealer.hand_value < 17 || (dealer.hand_value == 17 && dealer.has_ace?)
+            dealer.draw_card(Card.random(@game.id).first)
+          end
+
+          break
+
+        # play their turn if an AI
+        elsif next_player.human == false
+          play_ai_turn next_player
+
+        # start turn if next player is human and not dropped
+        elsif !next_player.dropped?
+          next_player.begin_turn
+          break
+        end
+      end
+    end
+
     def draw(options = {})
       @player.draw_card(Card.random(@game.id).first, options)
     end
 
     def start_game
-      @game.players.create(name: "dealer", stayed: false)
+      @game.players.create(name: "dealer", stayed: false, human: false)
       @game.update round: 1
       @game.load_deck
       @game.players.each do |player|
