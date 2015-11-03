@@ -11,25 +11,22 @@ $(document).on 'ready page:load', ->
         window.location.href = "#{get_root()}blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
       $("#game-data tr").remove()
       for player in data1
-        do (player) ->
-          $.getJSON "#{get_root()}cards?player_id=#{player.id}"
-          .done (data2) ->
-            card_string = ""
-            card_string2 = ""
-            for card in data2
-              if card.split_hand == null || card.split_hand == "left"
-                if get_player_id() != player.id && card.hidden
-                  card_string += "<td> hidden </td>"
-                else
-                  card_string += "<td> #{card.value} of #{card.suit} </td>"
-              else
-                if get_player_id() != player.id && card.hidden
-                  card_string2 += "<td> hidden </td>"
-                else
-                  card_string2 += "<td> #{card.value} of #{card.suit} </td>"
-            $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr data-player=\"#{player.name}\" >#{card_string}</tr>"
-            if card_string2
-              $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr data-player=\"#{player.name}\" >#{card_string2}</tr>"
+        card_string = ""
+        card_string2 = ""
+        for card in player.cards
+          if card.split_hand == null || card.split_hand == "left"
+            if get_player_id() != player.id && card.hidden
+              card_string += "<td> hidden </td>"
+            else
+              card_string += "<td> #{card.value} of #{card.suit} </td>"
+          else
+            if get_player_id() != player.id && card.hidden
+              card_string2 += "<td> hidden </td>"
+            else
+              card_string2 += "<td> #{card.value} of #{card.suit} </td>"
+        $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr data-player=\"#{player.name}\" >#{card_string}</tr>"
+        if card_string2
+          $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr data-player=\"#{player.name}\" >#{card_string2}</tr>"
 
   autoUpdate = ->
     if window.location.pathname == "#{get_root()}blackjack/join" || window.location.pathname == "#{get_root()}blackjack/split"
