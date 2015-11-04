@@ -13,7 +13,10 @@ Rails.application.routes.draw do
 
   post 'blackjack/start'
 
+  post 'blackjack/poll'
+
   root 'welcome#index'
+
   resources :games
   resources :players
   # The priority is based upon order of creation: first created -> highest priority.

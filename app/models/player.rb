@@ -105,4 +105,12 @@ class Player < ActiveRecord::Base
   def has_charlie?
     (cards.size == 7 && hand_value <= 21)
   end
+
+  def drop
+    end_turn nil, true
+  end
+
+  def dropped?
+    alive > 2
+  end
 end

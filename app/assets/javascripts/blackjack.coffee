@@ -28,8 +28,12 @@ $(document).on 'ready page:load', ->
         if card_string2
           $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr data-player=\"#{player.name}\" >#{card_string2}</tr>"
 
+  poll = ->
+    $.post "#{get_root()}blackjack/poll", { game_id: get_game_id(), player_id: get_player_id() }
+
   autoUpdate = ->
     if window.location.pathname == "#{get_root()}blackjack/join" || window.location.pathname == "#{get_root()}blackjack/split"
+      poll()
       updateGame()
       setTimeout autoUpdate, 5000
 

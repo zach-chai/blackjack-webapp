@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103162607) do
+ActiveRecord::Schema.define(version: 20151103185628) do
 
   create_table "cards", force: :cascade do |t|
     t.string   "suit",       limit: 255
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20151103162607) do
     t.boolean  "human",                    default: true
     t.integer  "left_score"
     t.integer  "right_score"
+    t.integer  "alive",                    default: 0
   end
 
   add_index "players", ["game_id"], name: "index_players_on_game_id"
