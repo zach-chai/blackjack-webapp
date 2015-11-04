@@ -112,6 +112,8 @@ class BlackjackController < ApplicationController
           @game.players.each do |player|
             player.calculate_score!
           end
+
+          rank_players_and_set_results
         end
       end
     end
@@ -237,5 +239,40 @@ class BlackjackController < ApplicationController
         true
       end
       result
+    end
+
+    def rank_players_and_set_results
+      @game.players.each do |player|
+        if player.has_charlie?
+          player.update rank: 1, result: "Wins with 7-card charlie"
+          return
+        end
+      end
+      score = 0
+      players = @game.players.where("score < 22").order(score: :desc)
+
+      if players.second && players.first.score == players.second.score
+        if players.first.cards.size == players.second.cards.size
+          players.first.update rank: 1, result: "Tie same score and hand size"
+          players.second.update rank: 1, result: "Tie same score and hand size"
+        elsif players.first.cards.size < players.second.cards.size
+          players.first.update rank: 1, result: "Wins with highest score and fewest cards"
+        else
+          players.second.update rank: 1, result: "Wins with highest score and fewest cards"
+        end
+      else
+        players.first.update rank: 1
+        if players.first.score == 21
+          players.first.update result: "Wins with Blackjack"
+        else
+          players.first.update result: "Wins with highest score"
+        end
+      end
+
+      @game.players.each do |player|
+        if player && player.score > 21
+          player.update result: "Bust"
+        end
+      end
     end
 end

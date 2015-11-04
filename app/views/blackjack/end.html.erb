@@ -21,10 +21,10 @@
         <% if player.has_split %>
           <td><h4><%= "#{player.left_score}" %></h4></td>
         <% else %>
-          <td><h4><%= "#{player.score}" %></h4></td>
+          <td><h4 class="score" data-player=<%= "#{player.name}" %> ><%= "#{player.score}" %></h4></td>
         <% end %>
         <td><h4><%= "#{player.right_score}" %></h4></td>
-        <td><h4><%= "need result" %></h4></td>
+        <td><h4 class="result" data-player=<%= "#{player.name}" %> ><%= "#{player.result}" %></h4></td>
       </tr>
     <% end %>
   </tbody>

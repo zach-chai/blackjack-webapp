@@ -95,7 +95,15 @@ class Player < ActiveRecord::Base
   def calculate_score!
     self.reload
     if has_split
-      self.update left_score: split_value("left"), right_score: split_value("right")
+      l_score = split_value("left")
+      r_score = split_value("right")
+
+      if l_score < 21 && l_score > r_score
+        s = l_score
+      else
+        s = r_score
+      end
+      self.update left_score: l_score, right_score: r_score, score: s
     else
       self.score = hand_value
     end
@@ -108,6 +116,7 @@ class Player < ActiveRecord::Base
 
   def drop
     end_turn nil, true
+    self.update result: "Dropped"
   end
 
   def dropped?
