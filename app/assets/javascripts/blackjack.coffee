@@ -24,9 +24,9 @@ $(document).on 'ready page:load', ->
               card_string2 += "<td> hidden </td>"
             else
               card_string2 += "<td> #{card.value} of #{card.suit} </td>"
-        $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr class=\"hand\" data-player=\"#{player.name}\" >#{card_string}</tr>"
+        $("#game-data").append "<tr><td>Player #{player.name} Hand 1</td></tr><tr id=\"player-#{player.name}-hand\" class=\"hand\" data-player=\"#{player.name}\" >#{card_string}</tr>"
         if card_string2
-          $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr class=\"hand\" data-player=\"#{player.name}\" >#{card_string2}</tr>"
+          $("#game-data").append "<tr><td>Player #{player.name} Hand 2</td></tr><tr id=\"player-#{player.name}-hand\" class=\"hand\" data-player=\"#{player.name}\" >#{card_string2}</tr>"
 
   poll = ->
     $.post "#{get_root()}blackjack/poll", { game_id: get_game_id(), player_id: get_player_id() }
