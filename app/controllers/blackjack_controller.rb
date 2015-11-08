@@ -107,7 +107,6 @@ class BlackjackController < ApplicationController
 
         # end game if everyone has stayed
         if @game.players.where(stayed: false).size == 1
-          puts "calculating score"
           # calculate all scores and charlie
           @game.players.each do |player|
             player.calculate_score!

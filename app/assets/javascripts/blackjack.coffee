@@ -35,7 +35,12 @@ $(document).on 'ready page:load', ->
     if window.location.pathname == "#{get_root()}blackjack/join" || window.location.pathname == "#{get_root()}blackjack/split"
       poll()
       updateGame()
-      setTimeout autoUpdate, 5000
+      setTimeout autoUpdate, 4000
+
+  autoPoll = ->
+    if window.location.pathname == "#{get_root()}blackjack/join" || window.location.pathname == "#{get_root()}blackjack/split"
+      poll()
+      setTimeout autoPoll, 5000
 
   $(".action").click ->
     action = $(this).data "action"
@@ -58,3 +63,4 @@ $(document).on 'ready page:load', ->
     $("#app-root").attr "href"
 
   autoUpdate()
+  autoPoll()
