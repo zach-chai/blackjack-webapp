@@ -11,6 +11,11 @@ $(document).on 'ready page:load', ->
         window.location.href = "#{get_root()}blackjack/end?game_id=#{id}&player_id=#{get_player_id()}"
       $("#game-data tr").remove()
       for player in data1
+        if player.has_turn == true
+          if player.id == get_player_id()
+            $("#player-turn").text("Your turn")
+          else
+            $("#player-turn").text("Player #{player.name} turn")
         card_string = ""
         card_string2 = ""
         for card in player.cards
